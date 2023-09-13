@@ -24,8 +24,10 @@ import static org.junit.Assert.*;
  */
 public class IntQueueTest {
 
-    private IntQueue mQueue;
+    private ArrayIntQueue mQueue;
     private List<Integer> testList;
+
+    private ArrayIntQueue capacityTestQueue;
 
     /**
      * Called before each test.
@@ -33,8 +35,8 @@ public class IntQueueTest {
     @Before
     public void setUp() {
         // comment/uncomment these lines to test each class
-        mQueue = new LinkedIntQueue();
-//        mQueue = new ArrayIntQueue();
+//        mQueue = new LinkedIntQueue();
+        mQueue = new ArrayIntQueue();
 
         testList = new ArrayList<>(List.of(1, 2, 3));
     }
@@ -63,6 +65,13 @@ public class IntQueueTest {
     }
 
     @Test
+    public void testClear() {
+        testList.forEach(n -> mQueue.enqueue(n));
+        mQueue.clear();
+        assertEquals(mQueue.size(), 0);
+    }
+
+    @Test
     public void testEnqueue() {
         for (int i = 0; i < testList.size(); i++) {
             mQueue.enqueue(testList.get(i));
@@ -78,6 +87,20 @@ public class IntQueueTest {
             assertEquals(testList.get(i), mQueue.dequeue());
             assertEquals(testList.size() - i - 1, mQueue.size());
         }
+        assertNull(mQueue.dequeue());
+    }
+
+    @Test
+    public void testEnsureCapacity() {
+        capacityTestQueue = new ArrayIntQueue();
+        for (int i = 0; i < 8; i++) mQueue.enqueue(i);
+        mQueue.dequeue(); mQueue.dequeue(); mQueue.dequeue();
+        for (int i = 8; i < 18; i++) mQueue.enqueue(i);
+        int x = mQueue.dequeue();
+        int y = mQueue.dequeue();
+        assertEquals(3, x); 
+        assertEquals(4, y);
+        for (int i = 18; i < 27; i++) mQueue.enqueue(i);
     }
 
     @Test
